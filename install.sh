@@ -90,7 +90,7 @@ EOF
 # Create index page
 cat > $HOME/www/index.html<<-EOF
 <!DOCTYPE html>
-<html lang="fa">
+<html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -131,8 +131,10 @@ cat > $HOME/www/index.html<<-EOF
 </html>
 EOF
 
-# Create node info page with proper formatting
-cat > $HOME/www/$UUID.html<<-'HTMLEOF'
+# Create node info page 
+PAGE_FILE="$HOME/www/$UUID.html"
+
+cat > "$PAGE_FILE" <<-HTMLEOF
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
@@ -233,11 +235,6 @@ cat > $HOME/www/$UUID.html<<-'HTMLEOF'
     border-radius: 30px;
     z-index: 1000;
     display: none;
-    animation: slideDown 0.5s ease;
-  }
-  @keyframes slideDown {
-    from { transform: translateX(-50%) translateY(-100px); opacity: 0; }
-    to { transform: translateX(-50%) translateY(0); opacity: 1; }
   }
 </style>
 </head>
@@ -252,36 +249,36 @@ cat > $HOME/www/$UUID.html<<-'HTMLEOF'
 
   <div class="section">
     <h2>🔵 VMESS پروتکل</h2>
-    <div class="link-box" id="vmessLink">VMESS_LINK_PLACEHOLDER</div>
-    <button class="copy-btn" onclick="copyToClipboard('vmessLink')">📋 کپی لینک VMess</button>
+    <div class="link-box" id="vmessLink">${vmlink}</div>
+    <button class="copy-btn" onclick="copyText('vmessLink')">📋 کپی لینک VMess</button>
     <div class="qr-container">
-      <img src="/MDE04ADD9-5C68-8BAB-950C-08CD5320DF18.png" alt="VMess QR Code" onerror="this.parentElement.style.display='none'">
+      <img src="/M${UUID}.png" alt="VMess QR Code" onerror="this.parentElement.style.display='none'">
     </div>
   </div>
 
   <div class="section">
     <h2>🟣 VLESS پروتکل</h2>
-    <div class="link-box" id="vlessLink">VLESS_LINK_PLACEHOLDER</div>
-    <button class="copy-btn" onclick="copyToClipboard('vlessLink')">📋 کپی لینک VLESS</button>
+    <div class="link-box" id="vlessLink">${vllink}</div>
+    <button class="copy-btn" onclick="copyText('vlessLink')">📋 کپی لینک VLESS</button>
     <div class="qr-container">
-      <img src="/LDE04ADD9-5C68-8BAB-950C-08CD5320DF18.png" alt="VLESS QR Code" onerror="this.parentElement.style.display='none'">
+      <img src="/L${UUID}.png" alt="VLESS QR Code" onerror="this.parentElement.style.display='none'">
     </div>
   </div>
 
   <div class="section">
     <h2>🟢 Shadowsocks پروتکل</h2>
-    <div class="link-box" id="ssLink">SS_LINK_PLACEHOLDER</div>
-    <button class="copy-btn" onclick="copyToClipboard('ssLink')">📋 کپی لینک Shadowsocks</button>
+    <div class="link-box" id="ssLink">${sslink}</div>
+    <button class="copy-btn" onclick="copyText('ssLink')">📋 کپی لینک Shadowsocks</button>
     <div class="qr-container">
-      <img src="/SDE04ADD9-5C68-8BAB-950C-08CD5320DF18.png" alt="Shadowsocks QR Code" onerror="this.parentElement.style.display='none'">
+      <img src="/S${UUID}.png" alt="Shadowsocks QR Code" onerror="this.parentElement.style.display='none'">
     </div>
   </div>
 </div>
 
 <script>
-function copyToClipboard(elementId) {
-  var copyText = document.getElementById(elementId).innerText;
-  navigator.clipboard.writeText(copyText).then(function() {
+function copyText(elementId) {
+  var text = document.getElementById(elementId).innerText;
+  navigator.clipboard.writeText(text).then(function() {
     var alertBox = document.getElementById('alertBox');
     alertBox.style.display = 'block';
     setTimeout(function() {
@@ -294,11 +291,6 @@ function copyToClipboard(elementId) {
 </body>
 </html>
 HTMLEOF
-
-# Replace placeholders with actual links
-sed -i "s#VMESS_LINK_PLACEHOLDER#$vmlink#g" $HOME/www/$UUID.html
-sed -i "s#VLESS_LINK_PLACEHOLDER#$vllink#g" $HOME/www/$UUID.html
-sed -i "s#SS_LINK_PLACEHOLDER#$sslink#g" $HOME/www/$UUID.html
 
 clear
 
