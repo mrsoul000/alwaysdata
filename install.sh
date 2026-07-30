@@ -4,6 +4,7 @@
 # Xray for Alwaysdata.com (Updated 2026)
 # Based on original work by: ifeng
 # Updated with Shadowsocks support
+# Repository: https://github.com/mrsoul000/alwaysdata
 #
 #############################################################
 
@@ -27,8 +28,8 @@ XRAY_VERSION="v1.8.23"
 wget -q -O $TMP_DIRECTORY/xray.zip https://github.com/XTLS/Xray-core/releases/download/${XRAY_VERSION}/Xray-linux-64.zip
 unzip -oq -d $HOME $TMP_DIRECTORY/xray.zip xray geoip.dat geosite.dat
 
-# Download config template
-wget -q -O $TMP_DIRECTORY/config.json https://raw.githubusercontent.com/YOUR_USERNAME/V2ray-for-AlwaysData/main/config.json
+# Download config template from your repository
+wget -q -O $TMP_DIRECTORY/config.json https://raw.githubusercontent.com/mrsoul000/alwaysdata/main/config.json
 
 # Replace placeholders
 sed -i "s#UUID#$UUID#g" $TMP_DIRECTORY/config.json
@@ -62,7 +63,10 @@ EOF
 # Generate links
 vmlink=vmess://$(echo -n "{\"v\":\"2\",\"ps\":\"Alwaysdata-VMess\",\"add\":\"$URL\",\"port\":\"443\",\"id\":\"$UUID\",\"aid\":\"0\",\"net\":\"ws\",\"type\":\"none\",\"host\":\"$URL\",\"path\":\"$VMESS_WSPATH\",\"tls\":\"tls\"}" | base64 -w 0)
 vllink="vless://${UUID}@${URL}:443?encryption=none&security=tls&type=ws&host=${URL}&path=${VLESS_WSPATH}#Alwaysdata-VLess"
-sslink="ss://$(echo -n "2022-blake3-aes-128-gcm:${SS_PASSWORD}@${URL}:443?plugin=shadow-tls%3Bhost%3D${URL}%3Bpath%3D${SS_WSPATH}%3Bmode%3Dwebsocket" | base64 -w 0)#Alwaysdata-Shadowsocks"
+
+# Generate Shadowsocks SIP002 link
+SS_BASE64=$(echo -n "2022-blake3-aes-128-gcm:${SS_PASSWORD}" | base64 -w 0)
+sslink="ss://${SS_BASE64}@${URL}:443?path=${SS_WSPATH}&security=tls&type=ws&host=${URL}#Alwaysdata-Shadowsocks"
 
 # Generate QR codes (if qrencode is available)
 if command -v qrencode &> /dev/null; then
@@ -77,6 +81,7 @@ Author=$(cat <<-EOF
 # Xray for Alwaysdata.com
 # Original Author: ifeng
 # Updated with Shadowsocks & Xray
+# Repository: https://github.com/mrsoul000/alwaysdata
 #
 #############################################################
 EOF
@@ -121,17 +126,17 @@ div {
 </style>
 </head>
 <body bgcolor="#FFFFFF" text="#000000">
-<div><font color="#009900"><b>VMESS协议链接：</b></font></div>
+<div><font color="#009900"><b>VMESS پروتکل لینک:</b></font></div>
 <div>$vmlink</div>
-<div><font color="#009900"><b>VMESS协议二维码：</b></font></div>
+<div><font color="#009900"><b>VMESS QR کد:</b></font></div>
 <div><img src="/M$UUID.png"></div>
-<div><font color="#009900"><b>VLESS协议链接：</b></font></div>
+<div><font color="#009900"><b>VLESS پروتکل لینک:</b></font></div>
 <div>$vllink</div>
-<div><font color="#009900"><b>VLESS协议二维码：</b></font></div>
+<div><font color="#009900"><b>VLESS QR کد:</b></font></div>
 <div><img src="/L$UUID.png"></div>
-<div><font color="#009900"><b>Shadowsocks协议链接：</b></font></div>
+<div><font color="#009900"><b>Shadowsocks پروتکل لینک:</b></font></div>
 <div>$sslink</div>
-<div><font color="#009900"><b>Shadowsocks二维码：</b></font></div>
+<div><font color="#009900"><b>Shadowsocks QR کد:</b></font></div>
 <div><img src="/S$UUID.png"></div>
 </body>
 </html>
@@ -141,13 +146,13 @@ clear
 
 echo -e "\e[32m$Author\e[0m"
 
-echo -e "\n\e[33m请 COPY 以下绿色文字到 SERVICE Command* 中：\n\e[0m"
+echo -e "\n\e[33mلطفا متن سبز زیر را در قسمت SERVICE Command* کپی کنید:\n\e[0m"
 echo -e "\e[32m./xray -config config.json\e[0m"
-echo -e "\n\e[33m请 COPY 以下绿色文字到 Advanced Settings 中：\n\e[0m"
+echo -e "\n\e[33mلطفا متن سبز زیر را در قسمت Advanced Settings کپی کنید:\n\e[0m"
 echo -e "\e[32m$Advanced_Settings\e[0m"
 
-echo -e "\n\e[33m点击以下链接获取节点信息：\n\e[0m"
+echo -e "\n\e[33mبرای دریافت اطلاعات نود روی لینک زیر کلیک کنید:\n\e[0m"
 echo -e "\e[32mhttps://$URL/$UUID.html\n\e[0m"
 
-echo -e "\n\e[33mShadowsocks密码：\e[0m"
+echo -e "\n\e[33mShadowsocks رمز عبور:\e[0m"
 echo -e "\e[32m$SS_PASSWORD\n\e[0m"
