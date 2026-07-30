@@ -75,66 +75,13 @@ if command -v qrencode &> /dev/null; then
     qrencode -o $HOME/www/S$UUID.png $sslink
 fi
 
-Author=$(cat <<-EOF
-#############################################################
-#
-# Xray for Alwaysdata.com
-# Original Author: ifeng
-# Updated with Shadowsocks & Xray
-# Repository: https://github.com/mrsoul000/alwaysdata
-#
-#############################################################
-EOF
-)
+# ============================================
+# CREATE SIMPLE HTML PAGE (NO COMPLEX FORMATTING)
+# ============================================
 
-# Create index page
-cat > $HOME/www/index.html<<-EOF
-<!DOCTYPE html>
-<html lang="fa" dir="rtl">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Alwaysdata - Xray</title>
-<style>
-  body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #1e1e1e;
-    color: #e0e0e0;
-    margin: 0;
-    padding: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-  }
-  .container {
-    text-align: center;
-  }
-  h1 {
-    color: #4CAF50;
-    font-size: 3em;
-    margin: 0;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-  }
-  p {
-    color: #888;
-    font-size: 1.2em;
-  }
-</style>
-</head>
-<body>
-<div class="container">
-  <h1>Hello World</h1>
-  <p>Xray is running...</p>
-</div>
-</body>
-</html>
-EOF
+PAGE_URL="https://${URL}/${UUID}.html"
 
-# Create node info page 
-PAGE_FILE="$HOME/www/$UUID.html"
-
-cat > "$PAGE_FILE" <<-HTMLEOF
+cat > $HOME/www/$UUID.html <<-HTMLEOF
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
@@ -142,167 +89,131 @@ cat > "$PAGE_FILE" <<-HTMLEOF
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Alwaysdata - Xray Nodes</title>
 <style>
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
   body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: Tahoma, sans-serif;
     background-color: #1a1a2e;
-    color: #e0e0e0;
+    color: #ffffff;
     padding: 20px;
-    direction: rtl;
+    margin: 0;
   }
-  .container {
-    max-width: 900px;
-    margin: 0 auto;
-    background: linear-gradient(135deg, #16213e 0%, #0f3460 100%);
-    border-radius: 20px;
-    padding: 30px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-  }
-  .header {
-    text-align: center;
-    margin-bottom: 30px;
-    color: #e94560;
-    font-size: 2em;
-    font-weight: bold;
-  }
-  .section {
-    background-color: rgba(255,255,255,0.05);
-    border-radius: 15px;
-    padding: 20px;
-    margin-bottom: 25px;
-    border: 1px solid rgba(255,255,255,0.1);
-  }
-  .section h2 {
-    color: #4CAF50;
-    margin-bottom: 15px;
-    font-size: 1.5em;
-  }
-  .link-box {
-    background-color: #0a0a1a;
-    padding: 15px;
+  .box {
+    background-color: #16213e;
     border-radius: 10px;
+    padding: 20px;
+    margin: 15px auto;
+    max-width: 800px;
+  }
+  h2 {
+    color: #4CAF50;
+    margin-top: 0;
+  }
+  .link {
+    background-color: #0a0a1a;
+    padding: 12px;
+    border-radius: 5px;
     word-break: break-all;
-    font-family: 'Courier New', monospace;
-    font-size: 13px;
-    border: 1px solid #333;
-    margin: 15px 0;
+    font-family: monospace;
     direction: ltr;
     text-align: left;
+    margin: 10px 0;
+    font-size: 13px;
     color: #a5d6a7;
-    overflow-x: auto;
-    white-space: pre-wrap;
   }
-  .qr-container {
-    text-align: center;
-    margin: 20px 0;
-  }
-  .qr-container img {
-    max-width: 200px;
-    border: 3px solid #4CAF50;
-    border-radius: 10px;
-    background: white;
-    padding: 10px;
-  }
-  .copy-btn {
+  button {
     background-color: #4CAF50;
     color: white;
     border: none;
-    padding: 10px 25px;
-    border-radius: 25px;
+    padding: 10px 20px;
+    border-radius: 5px;
     cursor: pointer;
     font-size: 14px;
-    font-weight: bold;
-    transition: all 0.3s;
     margin: 5px;
   }
-  .copy-btn:hover {
+  button:hover {
     background-color: #45a049;
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
   }
-  .alert {
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #4CAF50;
-    color: white;
-    padding: 15px 30px;
-    border-radius: 30px;
-    z-index: 1000;
-    display: none;
+  img {
+    max-width: 200px;
+    margin: 10px;
+    background: white;
+    padding: 5px;
+    border-radius: 5px;
+  }
+  .qrcode {
+    text-align: center;
+    margin: 15px 0;
   }
 </style>
 </head>
 <body>
 
-<div id="alertBox" class="alert">✅ لینک با موفقیت کپی شد!</div>
-
-<div class="container">
-  <div class="header">
-    🚀 Alwaysdata Xray Nodes
-  </div>
-
-  <div class="section">
-    <h2>🔵 VMESS پروتکل</h2>
-    <div class="link-box" id="vmessLink">${vmlink}</div>
-    <button class="copy-btn" onclick="copyText('vmessLink')">📋 کپی لینک VMess</button>
-    <div class="qr-container">
-      <img src="/M${UUID}.png" alt="VMess QR Code" onerror="this.parentElement.style.display='none'">
-    </div>
-  </div>
-
-  <div class="section">
-    <h2>🟣 VLESS پروتکل</h2>
-    <div class="link-box" id="vlessLink">${vllink}</div>
-    <button class="copy-btn" onclick="copyText('vlessLink')">📋 کپی لینک VLESS</button>
-    <div class="qr-container">
-      <img src="/L${UUID}.png" alt="VLESS QR Code" onerror="this.parentElement.style.display='none'">
-    </div>
-  </div>
-
-  <div class="section">
-    <h2>🟢 Shadowsocks پروتکل</h2>
-    <div class="link-box" id="ssLink">${sslink}</div>
-    <button class="copy-btn" onclick="copyText('ssLink')">📋 کپی لینک Shadowsocks</button>
-    <div class="qr-container">
-      <img src="/S${UUID}.png" alt="Shadowsocks QR Code" onerror="this.parentElement.style.display='none'">
-    </div>
+<div class="box">
+  <h2>🔵 VMESS</h2>
+  <div class="link">${vmlink}</div>
+  <button onclick="navigator.clipboard.writeText('${vmlink}')">📋 کپی VMess</button>
+  <div class="qrcode">
+    <img src="/M${UUID}.png" alt="VMess QR">
   </div>
 </div>
 
-<script>
-function copyText(elementId) {
-  var text = document.getElementById(elementId).innerText;
-  navigator.clipboard.writeText(text).then(function() {
-    var alertBox = document.getElementById('alertBox');
-    alertBox.style.display = 'block';
-    setTimeout(function() {
-      alertBox.style.display = 'none';
-    }, 2000);
-  });
-}
-</script>
+<div class="box">
+  <h2>🟣 VLESS</h2>
+  <div class="link">${vllink}</div>
+  <button onclick="navigator.clipboard.writeText('${vllink}')">📋 کپی VLESS</button>
+  <div class="qrcode">
+    <img src="/L${UUID}.png" alt="VLESS QR">
+  </div>
+</div>
+
+<div class="box">
+  <h2>🟢 Shadowsocks</h2>
+  <div class="link">${sslink}</div>
+  <button onclick="navigator.clipboard.writeText('${sslink}')">📋 کپی Shadowsocks</button>
+  <div class="qrcode">
+    <img src="/S${UUID}.png" alt="SS QR">
+  </div>
+</div>
 
 </body>
 </html>
 HTMLEOF
 
+# Create simple index page
+cat > $HOME/www/index.html<<-EOF
+<html>
+<body style="background:#1a1a2e;color:white;text-align:center;padding-top:100px;font-family:Tahoma;">
+<h1 style="color:#4CAF50;">Hello World</h1>
+<p>Xray is running...</p>
+</body>
+</html>
+EOF
+
 clear
 
-echo -e "\e[32m$Author\e[0m"
+echo ""
+echo "=============================================="
+echo "  Xray for Alwaysdata"
+echo "  Updated 2026"
+echo "=============================================="
+echo ""
 
-echo -e "\n\e[33mلطفا متن سبز زیر را در قسمت SERVICE Command* کپی کنید:\n\e[0m"
-echo -e "\e[32m./xray -config config.json\e[0m"
-echo -e "\n\e[33mلطفا متن سبز زیر را در قسمت Advanced Settings کپی کنید:\n\e[0m"
-echo -e "\e[32m$Advanced_Settings\e[0m"
+echo "SERVICE Command (اینو کپی کن):"
+echo "------------------------------------------------"
+echo "./xray -config config.json"
+echo "------------------------------------------------"
+echo ""
 
-echo -e "\n\e[33mبرای دریافت اطلاعات نود روی لینک زیر کلیک کنید:\n\e[0m"
-echo -e "\e[32mhttps://$URL/$UUID.html\n\e[0m"
+echo "Advanced Settings (اینو کپی کن):"
+echo "------------------------------------------------"
+echo "$Advanced_Settings"
+echo "------------------------------------------------"
+echo ""
 
-echo -e "\n\e[33mShadowsocks رمز عبور:\e[0m"
-echo -e "\e[32m$SS_PASSWORD\n\e[0m"
+echo "لینک صفحه نودها:"
+echo "------------------------------------------------"
+echo "$PAGE_URL"
+echo "------------------------------------------------"
+echo ""
+
+echo "Shadowsocks Password: $SS_PASSWORD"
+echo ""
